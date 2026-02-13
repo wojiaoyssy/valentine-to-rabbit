@@ -1,0 +1,396 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>兔子大王情人节专属</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+            font-family: "微软雅黑", sans-serif;
+        }
+        body {
+            /* 背景图 + 渐变叠加，既美观又不影响文字阅读 */
+            background: 
+                linear-gradient(rgba(255, 230, 240, 0.9), rgba(255, 230, 240, 0.9)),
+                url("bj.jpg") center/cover fixed;
+            text-align: center;
+            padding: 20px;
+            position: relative;
+            overflow-x: hidden;
+            min-height: 100vh; /* 保证背景铺满整个页面 */
+        }
+
+        /* 滚动字幕：阿巴阿巴 */
+        .marquee {
+            position: fixed;
+            top: 5px;
+            left: 0;
+            width: 100%;
+            color: #ff5e97;
+            font-size: 14px;
+            font-weight: bold;
+            white-space: nowrap;
+            overflow: hidden;
+            z-index: 999;
+            pointer-events: none;
+        }
+        .marquee div {
+            display: inline-block;
+            animation: marquee 12s linear infinite;
+        }
+        @keyframes marquee {
+            0% { transform: translateX(100%); }
+            100% { transform: translateX(-100%); }
+        }
+
+        .page {
+            display: none;
+            margin-top: 50px;
+            padding-bottom: 20px;
+            /* 给内容加轻微透明背景，提升可读性 */
+            background: rgba(255, 255, 255, 0.6);
+            border-radius: 20px;
+            padding: 20px 10px;
+            max-width: 500px;
+            margin-left: auto;
+            margin-right: auto;
+            box-shadow: 0 4px 15px rgba(255, 94, 151, 0.1);
+        }
+        .active {
+            display: block;
+        }
+        h1 {
+            font-size: 26px;
+            color: #ff5e97;
+            margin-bottom: 20px;
+        }
+        .icon-img {
+            width: 200px;
+            height: 150px;
+            margin: 20px auto;
+            display: block;
+            border-radius: 10px;
+            box-shadow: 0 2px 8px rgba(255, 94, 151, 0.2);
+        }
+        .icon-img2 {
+            width: 150px;
+            height: 230px;
+            margin: 20px auto;
+            display: block;
+            border-radius: 10px;
+            box-shadow: 0 2px 8px rgba(255, 94, 151, 0.2);
+        }
+        .icon-img3 {
+            width: 150px;
+            height: 250px;
+            margin: 20px auto;
+            display: block;
+            border-radius: 10px;
+            box-shadow: 0 2px 8px rgba(255, 94, 151, 0.2);
+        }
+        .btn {
+            background: #ff8fb8;
+            color: white;
+            border: none;
+            padding: 12px 25px;
+            margin: 10px;
+            border-radius: 20px;
+            font-size: 16px;
+            cursor: pointer;
+            box-shadow: 0 2px 8px rgba(255, 94, 151, 0.2);
+            transition: all 0.3s ease;
+        }
+        .btn:hover {
+            background: #ff5e97;
+            transform: translateY(-2px);
+            box-shadow: 0 4px 12px rgba(255, 94, 151, 0.3);
+        }
+        .nav-box {
+            margin-top: 25px;
+        }
+        .nav-btn {
+            background: #ffc2d8;
+            padding: 6px 14px;
+            font-size: 13px;
+            border-radius: 12px;
+            margin: 0 6px;
+        }
+
+        /* 横向无限滚动轮播（优化版） */
+        .photo-box {
+            width: 90%;
+            max-width: 400px;
+            height: 280px;
+            margin: 20px auto 30px;
+            border-radius: 20px;
+            overflow: hidden;
+            background: #fff;
+            box-shadow: 0 6px 20px rgba(255, 94, 151, 0.2);
+            position: relative;
+        }
+        .photo-scroll-wrapper {
+            display: flex;
+            height: 100%;
+            animation: scroll 25s linear infinite;
+        }
+        .photo {
+            width: 100%;
+            height: 100%;
+            object-fit: cover; /* 图片填满容器，不变形 */
+            object-position: center; /* 图片绝对居中 */
+            flex-shrink: 0; /* 防止图片被压缩 */
+        }
+        @keyframes scroll {
+            0% { transform: translateX(0); }
+            100% { transform: translateX(-900%); } /* 9张图，滚动距离为-900% */
+        }
+
+        /* 基础文字样式 */
+        .msg {
+            font-size: 18px;
+            margin: 12px 0;
+            line-height: 1.8;
+        }
+        /* 告白文字配色：甜系渐变 */
+        .love-msg-1 { color: #ff5e97; /* 玫红 */ }
+        .love-msg-2 { color: #d895f2; /* 浅紫 */ }
+        .love-msg-3 { color: #ff7eb6; /* 浅粉 */ }
+        .love-msg-4 { color: #f875aa; /* 蜜桃粉 */ font-weight: bold; }
+        .love-msg-5 { color: #e85c9c; /* 深粉 */ }
+        .love-msg-6 { color: #ff8fb8; /* 樱花粉 */ }
+        .love-msg-7 { color: #ff4da6; /* 亮粉 */ }
+        .love-msg-8 { color: #c56efd; /* 紫粉 */ font-weight: bold; }
+        .love-msg-9 { color: #ff5e97; opacity: 0.8; } /* 日期 */
+        .love-msg-10 { color: #d895f2; opacity: 0.8; font-style: italic; } /* 署名 */
+
+        #page1 .prev-btn { display: none; }
+        #page8 .next-btn { display: none; }
+
+        /* 手机端适配 */
+        @media (max-width: 480px) {
+            .photo-box {
+                height: 250px;
+                width: 95%;
+            }
+            .msg {
+                font-size: 16px;
+                padding: 0 10px;
+            }
+            h1 {
+                font-size: 22px;
+            }
+            .icon-img2 {
+                width: 130px;
+                height: 200px;
+            }
+            .page {
+                margin-top: 30px;
+                padding: 15px 5px;
+            }
+        }
+    </style>
+</head>
+<body>
+
+<!-- 顶部滚动字幕：阿巴阿巴 -->
+<div class="marquee">
+    <div>🐰阿巴阿巴～兔子大王最可爱💕 超喜欢你超喜欢你✨</div>
+</div>
+
+<!-- 封面 -->
+<div class="page active" id="page1">
+    <img src="https://ibb.co/4nH0MGYg"><img src="https://i.ibb.co/NdMGpPmn/hz0.jpg" class="icon-img">
+    <h1>To 兔子大王</h1>
+    <p class="msg" style="color:#d895f2; font-size:17px;">
+        您的小弟接下来要严肃问你一些问题<br>
+        来考验我们的默契<br>
+        准备好了就开始吧～
+    </p>
+    <button class="btn" onclick="go(2)">开始玩🐰</button>
+    <div class="nav-box">
+        <button class="btn nav-btn prev-btn" onclick="go(1)">上一题</button>
+        <button class="btn nav-btn next-btn" onclick="go(2)">下一题</button>
+    </div>
+</div>
+
+<!-- 1 -->
+<div class="page" id="page2">
+    <img src="https://i.ibb.co/BHyq6L64/hz6.jpg" class="icon-img">
+    <h1>第一题</h1>
+    <p class="msg">我最喜欢什么？</p>
+    <button class="btn" onclick="a1()">A. 篮球🏀</button>
+    <button class="btn" onclick="b1()">B. 睡觉😴</button>
+    <button class="btn" onclick="c1()">C. 钢铁侠🦸‍♂️（没错我是钢铁侠）</button>
+    <button class="btn" onclick="msg1()">D. 兔子大王🐰</button>
+    <div class="nav-box">
+        <button class="btn nav-btn prev-btn" onclick="go(1)">上一题</button>
+        <button class="btn nav-btn next-btn" onclick="go(3)">下一题</button>
+    </div>
+</div>
+
+<!-- 2 -->
+<div class="page" id="page3">
+    <img src="https://i.ibb.co/1Gz5BvY0/qs1.jpg" class="icon-img">
+    <h1>第二题</h1>
+    <p class="msg">我会永远宠兔子大王，对不对？</p>
+    <button class="btn" onclick="msg2()">A. 对！💕</button>
+    <button class="btn" onclick="msg2()">B. 当然对！💖</button>
+    <button class="btn" onclick="c2()">C. 不对！❌</button>
+    <div class="nav-box">
+        <button class="btn nav-btn prev-btn" onclick="go(2)">上一题</button>
+        <button class="btn nav-btn next-btn" onclick="go(4)">下一题</button>
+    </div>
+</div>
+
+<!-- 3 -->
+<div class="page" id="page4">
+    <img src="https://i.ibb.co/2YCsfzKT/hz3.jpg" class="icon-img">
+    <h1>第三题</h1>
+    <p class="msg">我每天最想做的事是？</p>
+    <button class="btn" onclick="a3()">A. 好好学习📖</button>
+    <button class="btn" onclick="b3()">B. 吃吃吃🍡</button>
+    <button class="btn" onclick="c3()">C. 粘着你🥰</button>
+    <button class="btn" onclick="d3()">D. 我不知道啊😥</button>
+    <div class="nav-box">
+        <button class="btn nav-btn prev-btn" onclick="go(3)">上一题</button>
+        <button class="btn nav-btn next-btn" onclick="go(5)">下一题</button>
+    </div>
+</div>
+
+<!-- 4 -->
+<div class="page" id="page5">
+    <img src="https://i.ibb.co/RGc5DLJ0/sq.jpg" class="icon-img2">
+    <h1>第四题</h1>
+    <p class="msg">兔子大王生气了怎么办？</p>
+    <button class="btn" onclick="a4()">A. 不管她😶</button>
+    <button class="btn" onclick="msg4()">B. 马上哄！🥺</button>
+    <button class="btn" onclick="c4()">C. 讲道理💬</button>
+    <div class="nav-box">
+        <button class="btn nav-btn prev-btn" onclick="go(4)">上一题</button>
+        <button class="btn nav-btn next-btn" onclick="go(6)">下一题</button>
+    </div>
+</div>
+
+<!-- 5 -->
+<div class="page" id="page6">
+    <img src="https://i.ibb.co/pvm5qW3d/hzyz1.jpg" class="icon-img3">
+    <h1>第五题</h1>
+    <p class="msg">未来的日子里我要？</p>
+    <button class="btn" onclick="a5()">A. 偶尔喜欢你🫣</button>
+    <button class="btn" onclick="b5()">B. 假装喜欢你😜</button>
+    <button class="btn" onclick="msg5()">C. 一直超超超喜欢你💘</button>
+    <div class="nav-box">
+        <button class="btn nav-btn prev-btn" onclick="go(5)">上一题</button>
+        <button class="btn nav-btn next-btn" onclick="go(7)">下一题</button>
+    </div>
+</div>
+
+<!-- 6 -->
+<div class="page" id="page7">
+    <img src="https://i.ibb.co/LXJkBMfR/hz2.jpg" class="icon-img2">
+    <h1>第六题</h1>
+    <p class="msg">兔子大王在我心里是？</p>
+    <button class="btn" onclick="a6()">A. 普通朋友👋</button>
+    <button class="btn" onclick="b6()">B. 好朋友🤝</button>
+    <button class="btn" onclick="msg6()">C. 最最最爱的人🥰</button>
+    <div class="nav-box">
+        <button class="btn nav-btn prev-btn" onclick="go(6)">上一题</button>
+        <button class="btn nav-btn next-btn" onclick="go(8)">下一题</button>
+    </div>
+</div>
+
+<!-- 最终页：横向无限滚动轮播 + 日期 + 署名 -->
+<div class="page" id="page8">
+    <img src="https://i.ibb.co/LzX2h33D/xz1.jpg" class="icon-img2">
+    <h1>兔子大王专属告白</h1>
+
+    <!-- 横向滚动轮播 -->
+    <div class="photo-box">
+        <div class="photo-scroll-wrapper">
+            <img src="https://i.ibb.co/99FjRhWT/hz1.jpg" class="photo">
+            <img src="https://i.ibb.co/Z1NTc977/hz4.jpg" class="photo">
+            <img src="https://i.ibb.co/PZjSzQwg/hz5.jpg" class="photo">
+            <img src="https://i.ibb.co/v61PGh4g/1.jpg" class="photo">
+            <img src="https://i.ibb.co/N66VNMrG/2.jpg" class="photo">
+            <img src="https://i.ibb.co/jkJfN1Ch/3.jpg" class="photo">
+            <img src="https://i.ibb.co/TBv1BZ4s/4.jpg" class="photo">
+            <img src="https://i.ibb.co/qMgpmvcn/5.jpg" class="photo">
+            <img src="https://i.ibb.co/MxrQjq0r/6.jpg" class="photo">
+        </div>
+    </div>
+
+    <!-- 告白文字（丰富配色） -->
+    <p class="msg love-msg-1">情人节快乐！</p>
+    <p class="msg love-msg-2">送你未来我的偏爱和陪伴。</p>
+    <p class="msg love-msg-3">以后每一天，我都在～</p>
+    <p class="msg love-msg-4">只爱世界上最最最特别的你</p>
+    <p class="msg love-msg-5">和你在一起的每一天都满是幸福与快乐</p>
+    <p class="msg love-msg-6">虽然还要等两个礼拜才能见面</p>
+    <p class="msg love-msg-7">但想着你就觉得甜甜甜的</p>
+    <p class="msg love-msg-8">遇见你，真的是我最大的幸运呀❤️</p>
+
+    <!-- 日期和署名 -->
+    <p class="msg love-msg-9" style="margin-top: 25px; font-size: 16px;">
+        2026年2月14日
+    </p>
+    <p class="msg love-msg-10" style="font-size: 16px;">
+        yours whoseyuan
+    </p>
+
+    <!-- 只有彩蛋按钮，去掉上一题 -->
+    <div class="nav-box">
+        <button class="btn nav-btn" onclick="showEgg()">彩蛋🐣</button>
+    </div>
+</div>
+
+<!-- 彩蛋弹窗（默认隐藏） -->
+<div id="egg" style="display:none; position:fixed; top:0; left:0; width:100%; height:100%; background:rgba(0,0,0,0.7); z-index:9999; justify-content:center; align-items:center; flex-direction:column;">
+    <img src="https://i.ibb.co/wx6b20T/xz2.jpg" style="width:80%; max-width:300px; border-radius:20px; box-shadow:0 0 20px #fff;">
+    <p style="color:#fff; font-size:22px; margin-top:20px; font-weight:bold;">我很高冷</p>
+    <button onclick="hideEgg()" style="margin-top:20px; padding:10px 20px; border-radius:20px; border:none; background:#ff8fb8; color:white; font-size:16px;">关掉</button>
+</div>
+<script>
+// 页面切换函数
+function go(n) {
+    if(n < 1 || n > 8) return;
+    document.querySelectorAll('.page').forEach(p => p.classList.remove('active'));
+    document.getElementById('page'+n).classList.add('active');
+}
+
+// 答题提示函数
+function wrong() { alert('选错啦～小笨蛋！o.0😜'); }
+function a1() { alert('不对，加上“和你一起打”会更喜欢💕'); }
+function b1() { alert('我不是小猪 你才是 嘻嘻🐷'); }
+function c1() { alert('就是那天勇敢的gtx收获了小弟hsy✨'); }
+function c2() { alert('此处脑补一个瞪眼派大星😳'); }
+
+function a3() { alert('你确定吗？！😯'); }
+function b3() { alert('嘿嘿嘿嘿好吃！以后会和你一直一起吃的！🍬'); }
+function c3() { alert('少管我 我就只是想想……不行吗🥺'); go(5); }
+function d3() { alert('那你完蛋了 说明c选项很有必要😜'); }
+
+function msg1() { alert('答对啦！兔子大王就是我的全世界～🐰❤️'); go(3); }
+function msg2() { alert('💕 永远不变！'); go(4); }
+function a4() { alert('那我完蛋了啊啊啊😱'); }
+function c4() { alert('我已经是觉悟人机了好吧😤'); }
+function a5() { alert('不对，小笨蛋😜'); }
+function b5() { alert('实际上…………看c（疯狂暗示💘'); }
+function a6() { alert('你完蛋了！哼！😤'); }
+function b6() { alert('伤心了，再给你一次机会💔'); }
+
+function msg4() { alert('兔子大王永远没错，我永远第一时间哄！🥺'); go(6); }
+function msg5() { alert('💘 不止今年，我会一年又一年地持续不断地喜欢你！'); go(7); }
+function msg6() { alert('🥰 恭喜全部答对！我的心里只有你～'); go(8); }
+// 彩蛋
+function showEgg() {
+    document.getElementById('egg').style.display = 'flex';
+}
+function hideEgg() {
+    document.getElementById('egg').style.display = 'none';
+}
+</script>
+</body>
+</html>
